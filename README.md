@@ -7,7 +7,7 @@ This project is a machine learning-powered application designed to predict the l
 -   **Readmission Prediction:** Uses a trained machine learning model to estimate readmission probability.
 -   **Interactive UI:** User-friendly interface built with React.
 -   **Real-time Analysis:** Fast predictions served via FastAPI.
--   **Data Visualization:** Visual representation of risk factors (if applicable).
+-   **Data Visualization:** Visual representation of risk factors.
 
 ## Tech Stack
 
