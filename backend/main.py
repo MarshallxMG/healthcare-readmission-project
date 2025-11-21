@@ -30,7 +30,7 @@ def home():
 @app.get("/health")
 def health_check():
     """Quick health check endpoint."""
-    return {"status": "ok", "model_loaded": model_handler.model is not None}
+    return {"status": "ok", "model_loaded": model_handler.coef is not None}
 
 @app.post("/predict")
 def predict(req: PredictRequest):
@@ -41,7 +41,7 @@ def predict(req: PredictRequest):
       - risk_label ("LOW", "MEDIUM", "HIGH")
     """
     # Ensure model is loaded (lazy loading check)
-    if model_handler.model is None:
+    if model_handler.coef is None:
         model_handler.load_model()
         
     pred, prob, risk_label = model_handler.predict(req.data)

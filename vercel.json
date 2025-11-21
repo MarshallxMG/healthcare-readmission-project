@@ -2,7 +2,8 @@
   "builds": [
     {
       "src": "backend/main.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": { "excludeFiles": "model/*.pkl" }
     },
     {
       "src": "package.json",

@@ -1,4 +1,4 @@
-import joblib
+import json
 import numpy as np
 from pathlib import Path
 
@@ -6,35 +6,50 @@ model_handler = None
 
 class ModelHandler:
     def __init__(self):
-        self.model = None
+        self.coef = None
+        self.intercept = None
+        self.mean = None
+        self.scale = None
         self.columns = None
-        self.scaler = None
         self.load_model()
 
     def load_model(self):
         try:
             base_dir = Path(__file__).resolve().parent.parent
-            model_dir = base_dir / "model"
+            model_path = base_dir / "model" / "model_params.json"
             
-            self.model = joblib.load(model_dir / "best_model.pkl")
-            self.columns = joblib.load(model_dir / "feature_columns.pkl")
-            self.scaler = joblib.load(model_dir / "scaler.pkl")
+            with open(model_path, "r") as f:
+                params = json.load(f)
+                
+            self.coef = np.array(params["coef"])
+            self.intercept = params["intercept"]
+            self.mean = np.array(params["mean"])
+            self.scale = np.array(params["scale"])
+            self.columns = params["columns"]
+            
         except Exception as e:
             print(f"Error loading model: {e}")
 
     def predict(self, data_dict):
-        if not self.model:
+        if self.coef is None:
             self.load_model()
-            if not self.model:
+            if self.coef is None:
                 raise RuntimeError("Model not loaded")
 
+        # Prepare input vector
         ordered = [data_dict[col] for col in self.columns]
-        X = np.array([ordered])
-        X_scaled = self.scaler.transform(X)
-
-        prob = self.model.predict_proba(X_scaled)[0][1]
-        pred = 1 if prob >= 0.50 else 0
+        X = np.array(ordered)
         
+        # Scale input: (X - mean) / scale
+        X_scaled = (X - self.mean) / self.scale
+        
+        # Linear combination: dot(X_scaled, coef) + intercept
+        z = np.dot(X_scaled, self.coef) + self.intercept
+        
+        # Sigmoid function: 1 / (1 + exp(-z))
+        prob = 1 / (1 + np.exp(-z))
+        
+        pred = 1 if prob >= 0.50 else 0
         risk_label = self.get_risk_label(prob)
 
         return pred, float(prob), risk_label
