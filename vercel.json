@@ -3,7 +3,7 @@
     {
       "src": "backend/main.py",
       "use": "@vercel/python",
-      "config": { "excludeFiles": "model/*.pkl" }
+      "config": { "excludeFiles": "{model/*.pkl,venv/**,node_modules/**,frontend/**,.git/**}" }
     },
     {
       "src": "package.json",
