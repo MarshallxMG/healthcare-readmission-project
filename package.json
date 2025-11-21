@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "install-all": "npm install && cd frontend && npm install && cd ../backend && pip install -r requirements.txt",
-    "start": "concurrently \"d:\\healthcare-readmission-project\\venv\\Scripts\\python.exe -m uvicorn backend.main:app --reload\" \"cd frontend && npm start\""
+    "start": "concurrently \"d:\\healthcare-readmission-project\\venv\\Scripts\\python.exe -m uvicorn backend.main:app --reload\" \"cd frontend && npm start\"",
+    "build": "cd frontend && npm install && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
