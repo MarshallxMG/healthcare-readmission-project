@@ -5,10 +5,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
+import os
+
 # Correct import — utils is inside backend folder
 from backend.utils import model_handler
 
-app = FastAPI(title="Healthcare Readmission Prediction API")
+app = FastAPI(
+    title="Healthcare Readmission Prediction API",
+    root_path="/api" if os.getenv("VERCEL") else ""
+)
 
 # Enable CORS
 app.add_middleware(
